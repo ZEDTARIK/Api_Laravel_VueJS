@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-
+import Signin from '../views/Signin'
+import Dashboard from '../views/Dashboard'
+import store from '@/store'
 const routes = [
   {
     path: '/',
@@ -8,13 +10,21 @@ const routes = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    path: '/signin',
+    name: 'Signin',
+    component: Signin
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
+    beforeEnter: (to, from, next) => {
+      if (!store.getters['auth/authentications']) {
+        return next({ name: 'Signin' })
+      }
+      next();
+    }
+  },
 ]
 
 const router = createRouter({
